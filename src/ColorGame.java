@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ColorGame {
     //Never Bothered to make these local
@@ -16,6 +17,7 @@ public class ColorGame {
         JLabel highScoreClicks = makeLabel("HighScore: 9999",350,100,200,50);
         MyButton[][] buttons = new MyButton[size][size];
         JLabel clickerLabel = makeLabel("Clicks: 0",350,50,200,50);
+        AtomicBoolean notFirstTime = new AtomicBoolean(false);
 
         for (int y = 0; y < buttons.length; y++) {
             for (int x = 0; x < buttons[y].length; x++) {
@@ -51,16 +53,25 @@ public class ColorGame {
 
         JButton refresh = createButton(100,350,100,Color.yellow,"Reset");
         refresh.addActionListener(actionEvent -> {
+            System.out.println(won(buttons));
+            if (notFirstTime.get() && won(buttons)) {
+                updateHighScore(clickerLabel, highScoreClicks);
+            }
             switch (buttons.length) {
-                case 3: updateClickCount(clickerLabel,-9);
+                case 3:
+                    updateClickCount(clickerLabel, -9);
                     break;
-                case 4: updateClickCount(clickerLabel,-16);
+                case 4:
+                    updateClickCount(clickerLabel, -16);
                     break;
-                case 5: updateClickCount(clickerLabel,-25);
+                case 5:
+                    updateClickCount(clickerLabel, -25);
                     break;
-                case 6: updateClickCount(clickerLabel,-36);
+                case 6:
+                    updateClickCount(clickerLabel, -36);
                     break;
-                default: updateClickCount(clickerLabel,-100);
+                default:
+                    updateClickCount(clickerLabel, -100);
                     break;
             }
             for (MyButton[] button : buttons) {
@@ -71,14 +82,15 @@ public class ColorGame {
                         myButton.setBackground(Color.black);
                 }
             }
+
             for (MyButton[] button : buttons) {
                 for (MyButton ignored : button)
                     buttons[(int) (Math.random() * buttons.length)][(int) (Math.random() * button.length)].doClick();
             }
-            if ((Integer.parseInt(clickerLabel.getText().substring(8)) < Integer.parseInt((highScoreClicks.getText().substring(11)))) && won(buttons))
-                highScoreClicks.setText("Highscore: " + clickerLabel.getText().substring(8));
+
 
             clickerLabel.setText("Clicks: 0");
+            notFirstTime.set(true);
         });
 
         JButton newGame = createButton(200,350,100,Color.yellow,"New Game");
@@ -249,13 +261,26 @@ public class ColorGame {
                 return Color.black;
         }
     }
+    public static void updateHighScore(JLabel c, JLabel h) {
+        int clickNow = Integer.parseInt(c.getText().substring(8));
+        int highscore = Integer.parseInt(h.getText().substring(11));
+        if (clickNow < highscore) {
+            h.setText("Highscore: " + clickNow);
+        }
+    }
+    // detmines if all squares are same
     public static boolean won(MyButton[][] b) {
-        for (int x = 1; x < b.length; x++) {
-            for (int y = 0; y < b.length;y++) {
-                if (!(b[x][y].equals(b[0][0])))
+        System.out.println("t22t");
+        for (MyButton[] myButtons : b) {
+            for (int y = 0; y < b.length; y++) {
+                Color color1 = b[0][0].getBackground();
+                Color color2 = myButtons[y].getBackground();
+                if (color1 != color2) {
                     return false;
+                }
             }
         }
+        System.out.println("tttt");
         return true;
     }
     //This is a unnecessary class I made to use instead of a JButton, because I wanted to use the method I assigned to them, only long after realizing this was not necessary
