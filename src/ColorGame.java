@@ -1,22 +1,19 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.Arrays;
 
 public class ColorGame {
     static int difficulty = 0;
     static int size = 3;
-    static int count = 0;
     public static void main(String[] args) {
         difficultySelectScreen();
-
     }
     public static void runMainGame() {
         JFrame mainGameFrame = createAndShowFrame("GOOD LUCK");
 
         MyButton[][] buttons = new MyButton[size][size];
 
-        JLabel clickCounter = makeLabel("Clicks: 0",350,0,300,50);
+        JLabel clickerLabel = makeLabel("Clicks: 0",350,50,200,50);
 
         for (int y = 0; y < buttons.length; y++) {
             for (int x = 0; x < buttons[y].length; x++) {
@@ -26,72 +23,73 @@ public class ColorGame {
 
                 int finalX = x;
                 int finalY = y;
-                buttons[x][y].addActionListener(new ActionListener() {
-                    public void actionPerformed(ActionEvent actionEvent) {
-                        count++;
-                        clickCounter.setText("Clicks: " + count);
-                        System.out.println(count);
-                        changeColor(buttons[finalX][finalY]);
-                        if (!((finalX - 1 < 0) || (finalY - 1 < 0)))
-                            changeColor(buttons[finalX - 1][finalY - 1]);
-                        if (!((finalX - 1 < 0)))
-                            changeColor(buttons[finalX - 1][finalY]);
-                        if (!((finalY - 1 < 0)))
-                            changeColor(buttons[finalX][finalY - 1]);
-                        if (!((finalX + 1) > (size - 1) || (finalY + 1) > (size - 1)))
-                            changeColor(buttons[finalX + 1][finalY + 1]);
-                        if (!((finalX + 1) > (size - 1)))
-                            changeColor(buttons[finalX + 1][finalY]);
-                        if (!((finalY + 1) > (size - 1)))
-                            changeColor(buttons[finalX][finalY + 1]);
-                        if (!((finalX + 1 > (size - 1) || (finalY - 1) < 0)))
-                            changeColor(buttons[finalX + 1][finalY - 1]);
-                        if (!((finalX - 1 < 0) || (finalY + 1) > (size - 1)))
-                            changeColor(buttons[finalX - 1][finalY + 1]);
-
-
-                    }
+                buttons[x][y].addActionListener(actionEvent -> {
+                    changeColor(buttons[finalX][finalY]);
+                    if (!((finalX - 1 < 0) || (finalY - 1 < 0)))
+                        changeColor(buttons[finalX - 1][finalY - 1]);
+                    if (!((finalX - 1 < 0)))
+                        changeColor(buttons[finalX - 1][finalY]);
+                    if (!((finalY - 1 < 0)))
+                        changeColor(buttons[finalX][finalY - 1]);
+                    if (!((finalX + 1) > (size - 1) || (finalY + 1) > (size - 1)))
+                        changeColor(buttons[finalX + 1][finalY + 1]);
+                    if (!((finalX + 1) > (size - 1)))
+                        changeColor(buttons[finalX + 1][finalY]);
+                    if (!((finalY + 1) > (size - 1)))
+                        changeColor(buttons[finalX][finalY + 1]);
+                    if (!((finalX + 1 > (size - 1) || (finalY - 1) < 0)))
+                        changeColor(buttons[finalX + 1][finalY - 1]);
+                    if (!((finalX - 1 < 0) || (finalY + 1) > (size - 1)))
+                        changeColor(buttons[finalX - 1][finalY + 1]);
+                    updateClickCount(clickerLabel,1);
                 });
                 mainGameFrame.add(buttons[x][y]);
             }
         }
 
 
-        JButton refresh = createButton(200,400,100,Color.yellow,"Reset");
-        refresh.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent actionEvent) {for (int y = 0; y < buttons.length; y++) {
-                for (int z = 0; z < buttons.length; z++) {
-                    for (int a = 0; a < buttons[z].length; a++) {
-                        if (difficulty != 2)
-                        buttons[z][a].setBackground(Color.red);
-                        else
-                            buttons[z][a].setBackground(Color.black);
-                    }
-                }
-                for (int z = 0; z < buttons.length; z++) {
-                    for (int a = 0; a < buttons[z].length; a++) {
-
-                        buttons[(int)(Math.random() * buttons.length)][(int)(Math.random() * buttons[z].length)].doClick();
-                    }
+        JButton refresh = createButton(100,350,100,Color.yellow,"Reset");
+        refresh.addActionListener(actionEvent -> {
+            clickerLabel.setText("Clicks: 0");
+            switch (buttons.length) {
+                case 3: updateClickCount(clickerLabel,-9);
+                    break;
+                case 4: updateClickCount(clickerLabel,-16);
+                    break;
+                case 5: updateClickCount(clickerLabel,-25);
+                    break;
+                case 6: updateClickCount(clickerLabel,-36);
+                    break;
+                default: updateClickCount(clickerLabel,-100);
+                    break;
+            }
+            for (MyButton[] button : buttons) {
+                for (MyButton myButton : button) {
+                    if (difficulty != 2)
+                        myButton.setBackground(Color.red);
+                    else
+                        myButton.setBackground(Color.black);
                 }
             }
-
+            for (MyButton[] button : buttons) {
+                for (MyButton myButton: button)
+                    buttons[(int) (Math.random() * buttons.length)][(int) (Math.random() * button.length)].doClick();
             }
+
+
         });
 
 
-        JButton newGame = createButton(300,400,120,Color.yellow,"New Game");
-        newGame.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                mainGameFrame.setVisible(false);
-                difficultySelectScreen();
-            }
+        JButton newGame = createButton(200,350,100,Color.yellow,"New Game");
+        newGame.addActionListener(e -> {
+            mainGameFrame.setVisible(false);
+            difficultySelectScreen();
         });
 
 
         mainGameFrame.add(refresh);
         mainGameFrame.add(newGame);
-        mainGameFrame.add(clickCounter);
+        mainGameFrame.add(clickerLabel);
 
 
         refresh.doClick();
@@ -131,14 +129,10 @@ public class ColorGame {
         JButton hard = createButton(50,250,100,Color.gray,"Hard");
         JButton impossible = createButton(50,350,100,Color.darkGray,"Impossible");
 
-        easy.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent actionEvent) { difficulty = 0; sizeSelectScreen(); frame.setVisible(false);}});
-        medium.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent actionEvent) { difficulty = 1; sizeSelectScreen(); frame.setVisible(false); }});
-        hard.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent actionEvent) { difficulty = 2; sizeSelectScreen(); frame.setVisible(false); }});
-        impossible.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent actionEvent) { difficulty = 666; sizeSelectScreen(); frame.setVisible(false);}});
+        easy.addActionListener(actionEvent -> { difficulty = 0; sizeSelectScreen(); frame.setVisible(false);});
+        medium.addActionListener(actionEvent -> { difficulty = 1; sizeSelectScreen(); frame.setVisible(false); });
+        hard.addActionListener(actionEvent -> { difficulty = 2; sizeSelectScreen(); frame.setVisible(false); });
+        impossible.addActionListener(actionEvent -> { difficulty = 666; sizeSelectScreen(); frame.setVisible(false);});
 
         frame.add(easy);
         frame.add(medium);
@@ -153,14 +147,10 @@ public class ColorGame {
         JButton fiveByFive = createButton(50,250,100,Color.gray,"5x5");
         JButton sixBySix = createButton(50,350,100,Color.darkGray,"6x6");
 
-        threeByThree.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent actionEvent) { size = 3; runMainGame(); frame.setVisible(false);}});
-        fourByFour.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent actionEvent) { size = 4; runMainGame(); frame.setVisible(false); }});
-        fiveByFive.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent actionEvent) { size = 5; runMainGame(); frame.setVisible(false); }});
-        sixBySix.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent actionEvent) { size = 6; runMainGame(); frame.setVisible(false);}});
+        threeByThree.addActionListener(actionEvent -> { size = 3; runMainGame(); frame.setVisible(false);});
+        fourByFour.addActionListener(actionEvent -> { size = 4; runMainGame(); frame.setVisible(false); });
+        fiveByFive.addActionListener(actionEvent -> { size = 5; runMainGame(); frame.setVisible(false); });
+        sixBySix.addActionListener(actionEvent -> { size = 6; runMainGame(); frame.setVisible(false);});
 
         frame.add(sixBySix);
         frame.add(fiveByFive);
@@ -169,6 +159,7 @@ public class ColorGame {
     }
     public static MyButton createButton(int x, int y, int size, Color color) {
         MyButton button = new MyButton();
+        button.setOpaque(true);
         button.setBackground(color);
         button.setBounds(x,y,size,size);
         return button;
@@ -240,10 +231,13 @@ public class ColorGame {
                 b.setBackground(Color.black);
         }
     }
-    public static JLabel makeLabel(String name,int x,int y, int length, int width) {
+    public static JLabel makeLabel(String name,int x,int y, int length, int height) {
         JLabel label = new JLabel(name);
-        label.setBounds(x,y,length,width);
+        label.setBounds(x,y,length,height);
         return label;
+    }
+    public static void updateClickCount(JLabel j,int u) {
+        j.setText("Clicks: " + (Integer.parseInt(j.getText().substring(8)) + u));
     }
     static class MyButton extends JButton {
         public ActionListener action;
@@ -257,4 +251,5 @@ public class ColorGame {
             super.addActionListener(l);
         }
     }
+
 }
