@@ -12,10 +12,9 @@ public class ColorGame {
     }
     //Everything in here is how I did the screen where you click the colored buttons
     public static void runMainGame() {
-        JFrame mainGameFrame = createAndShowFrame("GOOD LUCK");
-
+        JFrame mainGameFrame = createAndShowFrame("Make all squares the same color!");
+        JLabel highScoreClicks = makeLabel("HighScore: 9999",350,100,200,50);
         MyButton[][] buttons = new MyButton[size][size];
-
         JLabel clickerLabel = makeLabel("Clicks: 0",350,50,200,50);
 
         for (int y = 0; y < buttons.length; y++) {
@@ -50,10 +49,8 @@ public class ColorGame {
             }
         }
 
-
         JButton refresh = createButton(100,350,100,Color.yellow,"Reset");
         refresh.addActionListener(actionEvent -> {
-            clickerLabel.setText("Clicks: 0");
             switch (buttons.length) {
                 case 3: updateClickCount(clickerLabel,-9);
                     break;
@@ -78,10 +75,11 @@ public class ColorGame {
                 for (MyButton ignored : button)
                     buttons[(int) (Math.random() * buttons.length)][(int) (Math.random() * button.length)].doClick();
             }
+            if ((Integer.parseInt(clickerLabel.getText().substring(8)) < Integer.parseInt((highScoreClicks.getText().substring(11)))) && won(buttons))
+                highScoreClicks.setText("Highscore: " + clickerLabel.getText().substring(8));
 
-
+            clickerLabel.setText("Clicks: 0");
         });
-
 
         JButton newGame = createButton(200,350,100,Color.yellow,"New Game");
         newGame.addActionListener(e -> {
@@ -93,7 +91,7 @@ public class ColorGame {
         mainGameFrame.add(refresh);
         mainGameFrame.add(newGame);
         mainGameFrame.add(clickerLabel);
-
+        mainGameFrame.add(highScoreClicks);
 
         refresh.doClick();
     }
@@ -251,6 +249,15 @@ public class ColorGame {
                 return Color.black;
         }
     }
+    public static boolean won(MyButton[][] b) {
+        for (int x = 1; x < b.length; x++) {
+            for (int y = 0; y < b.length;y++) {
+                if (!(b[x][y].equals(b[0][0])))
+                    return false;
+            }
+        }
+        return true;
+    }
     //This is a unnecessary class I made to use instead of a JButton, because I wanted to use the method I assigned to them, only long after realizing this was not necessary
     static class MyButton extends JButton {
         public ActionListener action;
@@ -264,5 +271,6 @@ public class ColorGame {
             super.addActionListener(l);
         }
     }
+
 
 }
