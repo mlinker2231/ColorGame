@@ -3,11 +3,14 @@ import java.awt.*;
 import java.awt.event.*;
 
 public class ColorGame {
+    //Never Bothered to make these local
     static int difficulty = 0;
     static int size = 3;
+    // Runs my game.
     public static void main(String[] args) {
         difficultySelectScreen();
     }
+    //Everything in here is how I did the screen where you click the colored buttons
     public static void runMainGame() {
         JFrame mainGameFrame = createAndShowFrame("GOOD LUCK");
 
@@ -72,7 +75,7 @@ public class ColorGame {
                 }
             }
             for (MyButton[] button : buttons) {
-                for (MyButton myButton: button)
+                for (MyButton ignored : button)
                     buttons[(int) (Math.random() * buttons.length)][(int) (Math.random() * button.length)].doClick();
             }
 
@@ -94,33 +97,7 @@ public class ColorGame {
 
         refresh.doClick();
     }
-    public static Color randomColor() {
-        int rand = (int) (Math.random() * 12);
-        switch (rand) {
-            case 0:
-                return Color.red;
-            case 1:
-                return Color.green;
-            case 2:
-                return Color.orange;
-            case 3:
-                return Color.yellow;
-            case 4:
-                return Color.blue;
-            case 5:
-                return Color.magenta;
-            case 6:
-                return Color.cyan;
-            case 7:
-                return Color.white;
-            case 8:
-                return Color.gray;
-            case 9:
-                return Color.lightGray;
-            default:
-                return Color.black;
-        }
-    }
+    //This is how I did everything in the difficulty select screen
     public static void difficultySelectScreen() {
         JFrame frame = createAndShowFrame("Difficulty Select");
 
@@ -139,6 +116,7 @@ public class ColorGame {
         frame.add(hard);
         frame.add(impossible);
     }
+    //This is how I did everything for the size select screen
     public static void sizeSelectScreen() {
         JFrame frame = createAndShowFrame("Size Select");
 
@@ -157,6 +135,7 @@ public class ColorGame {
         frame.add(fourByFour);
         frame.add(threeByThree);
     }
+    // Every button you see was created with this method
     public static MyButton createButton(int x, int y, int size, Color color) {
         MyButton button = new MyButton();
         button.setOpaque(true);
@@ -164,6 +143,7 @@ public class ColorGame {
         button.setBounds(x,y,size,size);
         return button;
     }
+    //Or this method, different type to return because idk
     public static JButton createButton(int x, int y, int size, Color color,String name) {
         JButton button = new JButton();
         button.setBackground(color);
@@ -171,6 +151,7 @@ public class ColorGame {
         button.setText(name);
         return button;
     }
+    //Each time a new screen pops up this method is called
     public static JFrame createAndShowFrame(String name) {
         JFrame J = new JFrame(name);
         J.setSize(500,500);
@@ -178,6 +159,7 @@ public class ColorGame {
         J.setVisible(true);
         return J;
     }
+    //Everytime you press a button on the main game this is called, to change color of whatever button I send it
     public static void changeColor(JButton b) {
         if (difficulty == 0) {
             if (b.getBackground().equals(Color.red))
@@ -231,14 +213,45 @@ public class ColorGame {
                 b.setBackground(Color.black);
         }
     }
+    //This is used to make every label you see, which is hopefully the clicker counter,timer,and high-scores
     public static JLabel makeLabel(String name,int x,int y, int length, int height) {
         JLabel label = new JLabel(name);
         label.setBounds(x,y,length,height);
         return label;
     }
+    //This...Updates the clicker count everytime you press a button
     public static void updateClickCount(JLabel j,int u) {
         j.setText("Clicks: " + (Integer.parseInt(j.getText().substring(8)) + u));
     }
+    //Chooses a random color of the 12 given with Color.
+    public static Color randomColor() {
+        int rand = (int) (Math.random() * 12);
+        switch (rand) {
+            case 0:
+                return Color.red;
+            case 1:
+                return Color.green;
+            case 2:
+                return Color.orange;
+            case 3:
+                return Color.yellow;
+            case 4:
+                return Color.blue;
+            case 5:
+                return Color.magenta;
+            case 6:
+                return Color.cyan;
+            case 7:
+                return Color.white;
+            case 8:
+                return Color.gray;
+            case 9:
+                return Color.lightGray;
+            default:
+                return Color.black;
+        }
+    }
+    //This is a unnecessary class I made to use instead of a JButton, because I wanted to use the method I assigned to them, only long after realizing this was not necessary
     static class MyButton extends JButton {
         public ActionListener action;
         public MyButton() {
