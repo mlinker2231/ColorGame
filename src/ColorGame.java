@@ -53,7 +53,6 @@ public class ColorGame {
 
         JButton refresh = createButton(100,350,100,Color.yellow,"Reset");
         refresh.addActionListener(actionEvent -> {
-            System.out.println(won(buttons));
             if (notFirstTime.get() && won(buttons)) {
                 updateHighScore(clickerLabel, highScoreClicks);
             }
@@ -270,7 +269,6 @@ public class ColorGame {
     }
     // detmines if all squares are same
     public static boolean won(MyButton[][] b) {
-        System.out.println("t22t");
         for (MyButton[] myButtons : b) {
             for (int y = 0; y < b.length; y++) {
                 Color color1 = b[0][0].getBackground();
@@ -280,7 +278,6 @@ public class ColorGame {
                 }
             }
         }
-        System.out.println("tttt");
         return true;
     }
     //This is a unnecessary class I made to use instead of a JButton, because I wanted to use the method I assigned to them, only long after realizing this was not necessary
