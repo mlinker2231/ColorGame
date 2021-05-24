@@ -114,17 +114,51 @@ public class ColorGame {
         JButton medium = createButton(50,150,100,Color.lightGray,"Medium");
         JButton hard = createButton(50,250,100,Color.gray,"Hard");
         JButton impossible = createButton(50,350,100,Color.darkGray,"Impossible");
+        JButton instructions = createButton(250,200,100,Color.yellow,"How to Play");
+
 
         easy.addActionListener(actionEvent -> { difficulty = 0; sizeSelectScreen(); frame.setVisible(false);});
         medium.addActionListener(actionEvent -> { difficulty = 1; sizeSelectScreen(); frame.setVisible(false); });
         hard.addActionListener(actionEvent -> { difficulty = 2; sizeSelectScreen(); frame.setVisible(false); });
         impossible.addActionListener(actionEvent -> { difficulty = 666; sizeSelectScreen(); frame.setVisible(false);});
+        instructions.addActionListener(actionEvent -> { instructionsScreen();frame.setVisible(false);});
+
 
         frame.add(easy);
         frame.add(medium);
         frame.add(hard);
         frame.add(impossible);
+        frame.add(instructions);
+
     }
+
+    private static void instructionsScreen() {
+        JFrame frame = createAndShowFrame("Directions and Tips");
+        JLabel instructionLabel1 = makeLabel("In this game your goal is to match all of the squares and make them the same color."
+        ,75,0,500,50);
+        JLabel instructionLabel2 = makeLabel( " \n To do this you must click on the sqaures, changeing its and all the sqaures touching its color. ",
+                75,50,600,50);
+        JLabel instructionLabel3 = makeLabel("\n Easy has two colors, medium has three, hard has five, and impossible has twelve. "
+                ,75,100,500,50);
+        JLabel instructionLabel4 = makeLabel("\n The reset button re-scrambles the puzzle and keeps track of the lowest number of clicks it took to solve it."
+                ,75,150,900,50);
+        JLabel instructionLabel5 = makeLabel("\n New Game button takes you back  to the difficulty select screen.",
+                75,200,500,50);
+        JButton backButton = createButton(0,350,100,Color.yellow,"back");
+
+        backButton.addActionListener(actionEvent -> {
+            difficultySelectScreen(); frame.setVisible(false);
+        });
+
+        frame.add(instructionLabel1);
+        frame.add(instructionLabel2);
+        frame.add(instructionLabel3);
+        frame.add(instructionLabel4);
+        frame.add(instructionLabel5);
+        frame.add(backButton);
+
+    }
+
     //This is how I did everything for the size select screen
     public static void sizeSelectScreen() {
         JFrame frame = createAndShowFrame("Size Select");
@@ -163,7 +197,7 @@ public class ColorGame {
     //Each time a new screen pops up this method is called
     public static JFrame createAndShowFrame(String name) {
         JFrame J = new JFrame(name);
-        J.setSize(500,500);
+        J.setSize(700,500);
         J.setLayout(null);
         J.setVisible(true);
         return J;
