@@ -1,3 +1,5 @@
+import sun.lwawt.macosx.CImage;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -131,24 +133,34 @@ public class ColorGame {
         frame.add(instructions);
 
     }
-
+    //Everything in the instructions screen in put here
     private static void instructionsScreen() {
         JFrame frame = createAndShowFrame("Directions and Tips");
         JLabel instructionLabel1 = makeLabel("In this game your goal is to match all of the squares and make them the same color."
-        ,75,0,500,50);
+        ,75,0,800,50);
         JLabel instructionLabel2 = makeLabel( " \n To do this you must click on the sqaures, changeing its and all the sqaures touching its color. ",
-                75,50,600,50);
+                75,50,800,50);
         JLabel instructionLabel3 = makeLabel("\n Easy has two colors, medium has three, hard has five, and impossible has twelve. "
-                ,75,100,500,50);
+                ,75,100,800,50);
         JLabel instructionLabel4 = makeLabel("\n The reset button re-scrambles the puzzle and keeps track of the lowest number of clicks it took to solve it."
                 ,75,150,900,50);
         JLabel instructionLabel5 = makeLabel("\n New Game button takes you back  to the difficulty select screen.",
-                75,200,500,50);
+                75,200,800,50);
         JButton backButton = createButton(0,350,100,Color.yellow,"back");
 
         backButton.addActionListener(actionEvent -> {
             difficultySelectScreen(); frame.setVisible(false);
         });
+        JLabel image1 = new JLabel(new ImageIcon("/Users/michaellinker2231/Desktop/S1.png"));
+        image1.setBounds(0,450,75,75);
+        JLabel image2 = new JLabel(new ImageIcon("/Users/michaellinker2231/Desktop/S2.png"));
+        image2.setBounds(75,450,75,75);
+        JLabel image3 = new JLabel(new ImageIcon("/Users/michaellinker2231/Desktop/S3.png"));
+        image3.setBounds(150,450,75,75);
+        JLabel image4 = new JLabel(new ImageIcon("/Users/michaellinker2231/Desktop/S4.png"));
+        image4.setBounds(225,450,75,75);
+        JLabel image5 = new JLabel(new ImageIcon("/Users/michaellinker2231/Desktop/S5.png"));
+        image5.setBounds(300,450,75,75);
 
         frame.add(instructionLabel1);
         frame.add(instructionLabel2);
@@ -156,9 +168,9 @@ public class ColorGame {
         frame.add(instructionLabel4);
         frame.add(instructionLabel5);
         frame.add(backButton);
+        frame.add(image1);
 
     }
-
     //This is how I did everything for the size select screen
     public static void sizeSelectScreen() {
         JFrame frame = createAndShowFrame("Size Select");
@@ -197,7 +209,7 @@ public class ColorGame {
     //Each time a new screen pops up this method is called
     public static JFrame createAndShowFrame(String name) {
         JFrame J = new JFrame(name);
-        J.setSize(700,500);
+        J.setSize(900,600);
         J.setLayout(null);
         J.setVisible(true);
         return J;
@@ -294,6 +306,7 @@ public class ColorGame {
                 return Color.black;
         }
     }
+    //Updates High-score for clicks
     public static void updateHighScore(JLabel c, JLabel h) {
         int clickNow = Integer.parseInt(c.getText().substring(8));
         int highscore = Integer.parseInt(h.getText().substring(11));
@@ -301,7 +314,7 @@ public class ColorGame {
             h.setText("Highscore: " + clickNow);
         }
     }
-    // detmines if all squares are same
+    // determines if all squares are same
     public static boolean won(MyButton[][] b) {
         for (MyButton[] myButtons : b) {
             for (int y = 0; y < b.length; y++) {
